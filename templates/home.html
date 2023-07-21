@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>This is form page</title>
+    <style>
+        .flex {
+            display: flex;
+        }
+
+        .head {
+            display: flex;
+            justify-content: center;
+        }
+
+        .details {
+            margin-left: 6vw;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .name {
+            margin-left: 4vw;
+            font-size: 1.3rem;
+            margin-top: 5px;
+        }
+
+        .name input {
+            margin-left: 10px;
+            height: 32px;
+            width: 162px;
+            margin-top: 1px;
+            font-size: 1.0rem;
+            border-radius: 4px;
+            border: 1px solid black;
+        }
+
+        textarea {
+            margin-top: 10px;
+            margin-left: 14px;
+        }
+
+        .objective .label {
+            margin-top: 10px;
+        }
+
+        .mail input {
+            width: 215px;
+        }
+
+        .address input {
+            width: 300px;
+        }
+
+        .lists {
+            margin-left: 5vw;
+            margin-top: 14px;
+            font-size: 1.3rem;
+        }
+
+        .lists input {
+            margin-left: 10px;
+            margin-top: 7px;
+            width: 200px;
+        }
+
+        .submit {
+            display: flex;
+            justify-content: center;
+            height: 43px;
+            margin-bottom: 15px;
+        }
+
+        .submit input {
+            width: 114px;
+            border-radius: 13px;
+            background-color: #ff5932;
+            color: white;
+            font-size: 1.1rem;
+            text_decoration:none;
+        }
+        .not_PNG{
+            margin-left: 7vw;
+            margin-top: 32px;
+            font-size: 1.2rem;
+        }
+        .not_PNG a{
+            margin-left : 10px;
+        }
+        .img{
+            margin-left: 7vw;
+            margin-top: 20px;
+            height: 31px;
+            font-size: 1.2rem;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="head">
+        <h1>CV BUILDER</h1>
+    </div>
+    <form method="POST" action='fill_details' class="form" enctype="multipart/form-data">
+        <div class="details">ENTER DETAILS</div>
+        {% csrf_token %}
+        <div class="name"><label>First Name</label> <input type="text" name="firstname" value=""
+                placeholder="first name"></div>
+        <div class="name"><label>Last Name</label> <input type="text" name="lastname" value="" placeholder="last name">
+        </div>
+        <div class="name"><label>Stream</label> <input type="text" name="stream" value=""
+                placeholder="eg:web developer"></div>
+
+        <div class="name flex objective">
+            <label class="label">Objective</label>
+            <textarea type="text" name="objective" value="" placeholder="write about something about you in 30-50 words"
+                rows="4" cols="60"></textarea>
+        </div>
+
+        <div class="name"><label>Phone num</label><input type="text" name="phone" value="" placeholder="eg:0000011111">
+        </div>
+        <div class="name mail"><label>Email</label><input type="email" name="mail" value=""
+                placeholder="abc123@gmail.com">
+        </div>
+        <div class="name address"><label>Address</label><input type="address" name="address" value=""
+                placeholder="streetname,cityname"></div>
+
+                
+                <div class="name"><label>Enter Degree</label><input type="text" name="degree" value=""
+                    placeholder="BA/BTech/Bsc"></div>
+                    <div class="name"><label>University</label> <input type="text" name="college" value=""
+                        placeholder="college_name,city"></div>
+                        <div class="name"><label>Year Of Graduation</label><input type="number" name="year" value=""
+                            placeholder="enter year"></div>
+                            
+                            <div class="name"><label>College/University average percentile</label><input type="text" name="u_percentile"
+                                value="" placeholder="eg:87.5"></div>
+                                <div class="name"><label>Intermediate average percentile</label><input type="text" name="inter_percentile"
+                                    value="" placeholder="eg:90.0"></div>
+                                    <div class="name"><label>10th class percentile</label><input type="text" name="tenth_percentile" value=""
+                                        placeholder="eg:10"></div>
+                                        <div class="name skills"><label>Skills</label><input type="number" name="skills" value="" id="skills"
+                                                oninput="createListItems()" placeholder="give in number"></div>
+                                        <ul class="skill_lists lists" id="skill_lists"></ul>
+                                
+                                       
+                                        
+                                        <div class="certifications name"><label>Add Your Certificates</label><input type="number" name="certificates"
+                                            value="" id="certifications" placeholder="enter number of certificates" oninput="addcertificates()">
+                                        </div>
+                                        <ul class="certificate lists" id="certificate"></ul>
+                                        
+                                        <div class="projects name"><label>Add Your Projects</label><input type="number" name="projects" value=""
+                                            id="projects" placeholder="enter number of projects" oninput="addprojects()"></div>
+                                            <ul class="project lists" id="project"></ul>
+                                            
+                                            <div class="languages name"><label>Languages</label><input type="number" name="languages" value=""
+                                                    id="languages" oninput="createLangItems()" placeholder="give in number"></div>
+                                                    <ul class="lang_lists  lists" id="lang_lists"></ul>
+        <div class="photo">
+            <div class="not_PNG flex"> 
+                <div>If your photo is not a PNG convert it by using this link </div>
+                <div><a href="https://www.remove.bg/"> Click Me </div>
+                </div>
+            <input class="img" type="file" name="profile" accept=".png" required>
+        </div>
+        <div class="submit">
+            <input type="submit" value="submit">
+        </div>
+    </form>
+</body>
+<script>
+    function addprojects() {
+        var num = parseInt(document.getElementById("projects").value);
+        var listContainer = document.getElementById("project");
+
+        listContainer.innerHTML = "";
+        for (var i = 0; i < num; i++) {
+            var label = document.createElement("label");
+            label.textContent = "project" + (i + 1) + ":";
+            listContainer.appendChild(label);
+            var input = document.createElement("input");
+            input.type = "text";
+            input.name = "project" + i;
+            listContainer.appendChild(input);
+            listContainer.appendChild(document.createElement("br"));
+        }
+    }
+    function addcertificates() {
+        var num = parseInt(document.getElementById("certifications").value);
+        var listContainer = document.getElementById("certificate");
+
+        listContainer.innerHTML = "";
+        for (var i = 0; i < num; i++) {
+            var label = document.createElement("label");
+            label.textContent = "certificate" + (i + 1) + ":";
+            listContainer.appendChild(label);
+            var input = document.createElement("input");
+            input.type = "text";
+            input.name = "certificate" + i;
+            listContainer.appendChild(input);
+            listContainer.appendChild(document.createElement("br"));
+        }
+    }
+    function createLangItems() {
+        var num = parseInt(document.getElementById("languages").value);
+        var listContainer = document.getElementById("lang_lists");
+
+        listContainer.innerHTML = "";
+        for (var i = 0; i < num; i++) {
+            var label = document.createElement("label");
+            label.textContent = "Language" + (i + 1) + ":";
+            listContainer.appendChild(label);
+            var input = document.createElement("input");
+            input.type = "text";
+            input.name = "lang" + i;
+            listContainer.appendChild(input);
+            listContainer.appendChild(document.createElement("br"));
+        }
+    }
+    function createListItems() {
+        var num = parseInt(document.getElementById("skills").value);
+        var listContainer = document.getElementById("skill_lists");
+
+        listContainer.innerHTML = "";
+        for (var i = 0; i < num; i++) {
+            var label = document.createElement("label");
+            label.textContent = "Skill" + (i + 1) + ":";
+            listContainer.appendChild(label);
+            var input = document.createElement("input");
+            input.type = "text";
+            input.name = "skill" + i;
+            listContainer.appendChild(input);
+            listContainer.appendChild(document.createElement("br"));
+        }
+    }
+</script>
+
+</html>

@@ -1,0 +1,486 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET UR RESUME</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            color: #1a2a3b;
+        }
+
+        body {
+            background-color: rgb(43 43 43);
+        }
+
+        .loading_animation{
+            animation : fade-in 1s ease-out;
+        }
+        @keyframes fade-in{
+            from{
+                opacity:0;
+                transform : translateY(-50px);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        .objects {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .resume {
+            background-color: white;
+            width: 804px;
+            margin-top: 30px;
+            padding-bottom: 30px;
+        }
+
+        .box {
+            position: relative;
+            background-color: #27384c;
+            width: 152px;
+            height: 147px;
+            margin-top: 0px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .part1 {
+            width: 41%;
+        }
+
+        .img {
+            background-color: white;
+            position: absolute;
+            height: 217px;
+            border-radius: 135px;
+            top: 72px;
+            left: 75px;
+            width: 142px;
+        }
+
+        .img img {
+            height: 113%;
+            width: 130%;
+            margin-top: -36px;
+            margin-left: -24px;
+        }
+
+        .name {
+            margin-left: 21%;
+            margin-top: 7%;
+            font-size: 3rem;
+        }
+
+        .name .lastname {
+            margin-left: 68px;
+        }
+
+        .name .stream {
+            font-size: 2rem;
+            margin-top: 10px;
+        }
+
+        .objective {
+            margin-top: 91px;
+            margin-left: 45px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 250px;
+        }
+
+        .objective .head {
+            font-weight: bolder;
+            font-size: 1.5rem;
+        }
+
+        .objective .matter {
+            width: 230px;
+            margin-top: 11px;
+            font-size: 1.1rem;
+        }
+
+        .logo img {
+            height: 31px;
+            border-radius: 0px;
+            filter: invert(1);
+            background-color: #d8c7b3;
+            margin: 14px 17px 2px 55px;
+        }
+
+        .call .logo img {
+            border-radius: 23px;
+            height: 36px;
+        }
+
+        .mail .logo {
+            width: 35px;
+            height: 35px;
+            border-radius: 18px;
+            filter: invert(1);
+            background-color: #d8c7b3;
+            margin: 14px 17px 2px 55px;
+        }
+
+        .mail .logo img {
+            height: 25px;
+            border-radius: 0px;
+            filter: invert(0);
+            background-color: #d8c7b3;
+            margin: 5px 11px 2px 5px;
+
+        }
+
+        .address .logo {
+            width: 35px;
+            height: 35px;
+            border-radius: 18px;
+            filter: invert(1);
+            background-color: #d8c7b3;
+            margin: 14px 17px 2px 55px;
+        }
+
+        .address .logo img {
+            height: 25px;
+            border-radius: 0px;
+            filter: invert(0);
+            background-color: #d8c7b3;
+            margin: 5px 17px 2px 5px;
+        }
+
+        .number,
+        .email,
+        .homeaddress {
+            margin-top: 18px;
+            font-weight: bold;
+            font-size: 21px;
+        }
+
+        .languages .head {
+            font-size: 1.3rem;
+            padding-left: 71px;
+            margin-top: 20px;
+            height: 24px;
+            color: white;
+            margin-left: 43px;
+            background-color: #27384c;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        .language {
+            margin-top: 29px;
+        }
+
+        .language .lang1 {
+            margin-left: 62px;
+            list-style: none;
+            margin-top: 14px;
+            font-size: 1.2rem;
+        }
+
+        .skills .head {
+            font-size: 1.3rem;
+            padding-left: 94px;
+            margin-top: 20px;
+            height: 24px;
+            color: white;
+            margin-left: 43px;
+            background-color: #27384c;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        .skill li {
+            margin-left: 62px;
+            list-style: none;
+            margin-top: 14px;
+            font-size: 1.2rem;
+        }
+
+        .secondpart {
+            margin-left: 51px;
+            margin-top: 75px;
+        }
+
+        .courses .head {
+            font-size: 1.3rem;
+            padding-left: 22px;
+            margin-top: 20px;
+            height: 24px;
+            color: white;
+            margin-left: 33px;
+            background-color: #27384c;
+            width: 225px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        .course li {
+            margin-left: 62px;
+            list-style: none;
+            margin-top: 14px;
+            font-size: 1.2rem;
+        }
+
+        .projects .head {
+            font-size: 1.3rem;
+            padding-left: 64px;
+            margin-top: 20px;
+            height: 24px;
+            color: white;
+            margin-left: 33px;
+            background-color: #27384c;
+            width: 193px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        .project li {
+            margin-left: 62px;
+            list-style: none;
+            margin-top: 14px;
+            font-size: 1.2rem;
+        }
+
+        .education .head {
+            font-size: 1.3rem;
+            padding-left: 64px;
+            margin-top: 20px;
+            height: 24px;
+            color: white;
+            margin-left: 33px;
+            background-color: #27384c;
+            width: 193px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        .education .e_det {
+            margin-left: 60px;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .achievements .head {
+            font-size: 1.3rem;
+            padding-left: 60px;
+            margin-top: 20px;
+            height: 24px;
+            color: white;
+            margin-left: 33px;
+            background-color: #27384c;
+            width: 193px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        .achievements .ach {
+            margin-left: 40px;
+            margin-top: 12px;
+            font-size: 1.2rem;
+        }
+
+        .button {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 7px;
+        }
+
+        .button span {
+            padding: 15px 25px 17px 26px;
+            border: none;
+            color: white;
+            background-color: #ff5827;
+            border-radius: 22px;
+            cursor: pointer;
+            transition: background-color 0.5s;
+
+            &:hover {
+                background-color: white;
+                color: #ff5827;
+            }
+        }
+        .bars{
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .bar {
+            width: 266px;
+            background-color: blueviolet;
+            height: 10px;
+            border-radius: 10px;
+            display: none;
+            .p {
+                width: 0%;
+                height: 100%;
+                border-radius: 10px;
+                background-color: #ff5827;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="button" id="button">
+        <span onclick="generatePDF()">Download</span>
+    </div>
+    <div class="bars">
+    <div class="bar">
+        <div class="p"></div>
+    </div>
+</div>
+    <div class="objects loading_animation">
+
+        <div class="resume" id="resume">
+            <div class="flex">
+                <div class="box">
+                    <div class="img">
+                        <img src="{{my_photo_url}}" alt=" photo here">
+                    </div>
+                </div>
+                <div class="name">
+                    <div class="firstname" >{{firstname}}</div>
+                    <div class="lastname">{{lastname}}</div>
+                    <div class="stream">{{stream}}</div>
+                </div>
+            </div>
+            <div class="flex">
+                <div class="part1">
+                    <div class="objective">
+                        <div class="head">OBJECTIVE</div>
+                        <div class="matter">{{objective}}</div>
+                    </div>
+                    <div class="details">
+                        <div class="call flex">
+                            <div class="logo"><img src="{% static 'contact.png' %}" alt="call img">
+                            </div>
+                            <div class="number">{{phone}}</div>
+                        </div>
+                        <div class="mail flex">
+                            <div class="logo"><img src="{% static 'mail.jpg' %}" alt="mail img">
+                            </div>
+                            <div class="email ">{{mail}}</div>
+                        </div>
+                        <div class="address flex">
+                            <div class="logo"><img src="{% static 'home.png' %}" alt="home img">
+                            </div>
+                            <div class="homeaddress ">{{address}}</div>
+                        </div>
+                    </div>
+                    <div class="languages">
+                        <div class="head">LANGUAGES</div>
+                        <ul class="language">
+                                {% for language in lang_list %}
+                                <li class="lang1">{{ language|upper }}</li>
+                                {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="skills">
+                        <div class="head">SKILLS</div>
+                        <ul class="skill">
+                            {% for skills in skill_list%}
+                            <li class="skill1">{{skills}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="secondpart">
+                    <div class="courses">
+                        <div class="head">CERTIFICATIONS</div>
+                        <ul class="course">
+                            {% for certificate in certificate_list %}
+                            <li class="certificate">{{certificate}}</li>
+                            {% endfor%}
+                        </ul>
+                    </div>
+                    <div class="projects">
+                        <div class="head">PROJECTS</div>
+                        <ul class="project">
+                           {% for project in project_list%}
+                           <li class="project">{{project}}</li>
+                           {% endfor%}
+                        </ul>
+                    </div>
+                    <div class="education">
+                        <div class="head">EDUCATION</div>
+                        <div class="u_name e_det">{{degree}}</div>
+                        <div class="u_address e_det">University {{college}}</div>
+                        <div class="u_graduation e_det">Year of Graduation:{{year}}</div>
+                    </div>
+                    <div class="achievements">
+                        <div class="head ">ACHIEVEMENTS</div>
+                        <div class="univ ach">Percentage in BTech is: {{u_percentile}}%</div>
+                        <div class="Inter ach">Percentage in intermediate is : {{inter_percentile}}%</div>
+                        <div class="school ach">Percentage in 10th class:{{tenth_percentile}}%</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generatePDF() {
+            const resumecontainer = document.getElementById('resume');
+            const opt = {
+                margin: 0,
+                filename: 'resume.pdf',
+                image: { type: 'png', quality: 1 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(resumecontainer).set(opt).save();
+        }
+        $(document).ready(function(){
+            $("span").click(function () {
+                $("span").fadeOut();
+                
+                $("span").animate({
+                    width: "50px",
+                },  function () {
+                        $(".bar").css("display", "block");
+                        $("span").css("display","none");
+                        $(".p").animate({ width: "100%" }, 2000, function () {
+                            $(".bar").fadeOut(function(){
+                                $(".button").html("<span>Downloaded</span>");
+                                $("span").css("display","block");
+                                $("span").css("background-color","white");
+                                $("span").css("color","#ff5827");
+                            });
+                            $("span").animate({ top: "50%",width :"170px" });
+                            
+                        });
+                    });
+                });
+            });
+
+    </script>
+
+
+</body>
+
+</html>
